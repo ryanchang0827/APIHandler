@@ -30,7 +30,7 @@ For Android Networking
                 super.onFailure();
             }
         });
-        a.APIPath(API_PATH).httpMethod(Method.POST).setParams(params).execute();
+        a.APIPath(API_PATH).HttpMethod(Method.POST).Params(params).execute();
 ```
 
 ###without Parameters
@@ -55,7 +55,7 @@ For Android Networking
 
 ###Multiple task
 ```java
-        MultiTaskManager taskManager = new MultiTaskManager(this);
+        MultiTaskManager taskManager = new MultiTaskManager(activity);
 
         taskManager.setAllTaskFinishCallback(true);
 
@@ -79,7 +79,7 @@ For Android Networking
 
 ###Multiple task with loop
 ```java
-        MultiTaskManager taskManager = new MultiTaskManager(this);
+        MultiTaskManager taskManager = new MultiTaskManager(activity);
 
         Setting setting1 = new Setting()
                 .APIPath(API_PATH)
@@ -94,7 +94,7 @@ For Android Networking
         taskManager.addTask(setting2);
 
         // Get Data Thread
-        taskThread = new TaskThread(this, taskManager);
+        taskThread = new TaskThread(activity, taskManager);
         taskThread.start();
 ```
 ####Stop Thread
