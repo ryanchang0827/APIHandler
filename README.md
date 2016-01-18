@@ -68,7 +68,7 @@ For Android Networking
         taskManager.runAllTask();
 ```
 
-####and activity implements OnMultiTaskManagerCallbackListener
+####activity implements OnMultiTaskManagerCallbackListener
 ```java
         @Override
         public void onAllTaskFinish() {
