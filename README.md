@@ -68,6 +68,15 @@ For Android Networking
         taskManager.runAllTask();
 ```
 
+####and activity implements OnMultiTaskManagerCallbackListener
+```java
+        @Override
+        public void onAllTaskFinish() {
+                //Callback When All Task Finish
+                //No Support TaskThread
+        }
+```
+
 ###Multiple task with loop
 ```java
         MultiTaskManager taskManager = new MultiTaskManager(this);
