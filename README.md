@@ -97,4 +97,13 @@ For Android Networking
         taskThread = new TaskThread(this, taskManager);
         taskThread.start();
 ```
+####Stop Thread
+```java
+        try {
+            taskThread.setStop(true);
+            taskThread.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+```
 
