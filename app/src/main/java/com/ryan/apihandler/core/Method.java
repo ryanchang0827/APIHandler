@@ -1,7 +1,7 @@
 package com.ryan.apihandler.core;
 
 /**
- * Created by Ethan on 2015/10/7.
+ * Created by Ryan on 2016/1/15.
  */
 public enum Method {
     OPTIONS, GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT

@@ -8,10 +8,10 @@ import org.json.JSONObject;
  */
 
 public abstract class AbstractCallbackListener{
-    abstract void onPrepare();
-    abstract void onSuccess(String result);
-    abstract void onSuccess(JSONObject jsonObject);
-    abstract void onSuccess(JSONArray jsonArray);
-    abstract void onFailure();
+    public abstract void onPrepare();
+    public abstract void onSuccess(String result);
+    public abstract void onSuccess(JSONObject jsonObject);
+    public abstract void onSuccess(JSONArray jsonArray);
+    public abstract void onFailure();
 }
 

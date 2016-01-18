@@ -8,9 +8,6 @@ import org.json.JSONObject;
  */
 public class OnApiCallbackListener extends AbstractCallbackListener {
 
-    public OnApiCallbackListener() {
-    }
-
     @Override
     public void onPrepare() {
 

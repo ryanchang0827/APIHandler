@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
+import com.ryan.apihandler.task.MultiTaskManager;
 import com.ryan.apihandler.utils.Utils;
 
 import org.json.JSONArray;
@@ -32,19 +33,38 @@ import java.util.zip.GZIPOutputStream;
 public class APIHandler extends AsyncTask<Void, Integer, String> {
 
     private Activity activity;
+    private MultiTaskManager taskManager;
     private ProgressDialog dialog;
     private AbstractCallbackListener listener;
     private String apiPath = "";
     private Map<String,Object> p = null;
+
     private Method method = Method.GET;
 
-    public APIHandler(Activity activity, AbstractCallbackListener listener) {
+    private boolean isFinish = false;
+    private boolean isShowProgress = true;
+    private boolean isShowDialog = true;
+
+    public APIHandler(Activity activity) {
         this.activity = activity;
-        this.listener = listener;
         dialog = new ProgressDialog(activity);
         dialog.setMessage("Please Waiting...");
         dialog.setCancelable(false);
+    }
 
+    public APIHandler(Activity activity, AbstractCallbackListener listener) {
+        this(activity);
+        this.listener = listener;
+    }
+
+    public APIHandler(Activity activity,MultiTaskManager manager) {
+        this(activity);
+        this.taskManager = manager;
+    }
+
+    public APIHandler(Activity activity,MultiTaskManager manager, AbstractCallbackListener listener) {
+        this(activity, listener);
+        this.taskManager = manager;
     }
 
     public APIHandler APIPath(String path){
@@ -52,14 +72,28 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
         return this;
     }
 
-    public APIHandler httpMethod(Method method){
+    public APIHandler HttpMethod(Method method){
         this.method = method;
         return this;
     }
 
-    public APIHandler setParams(Map<String,Object> p){
+    public APIHandler Params(Map<String,Object> p){
         this.p = p;
         return this;
+    }
+
+    public APIHandler Setting(Setting setting){
+        this.listener = setting.listener;
+        this.apiPath = setting.apiPath;
+        this.p = setting.p;
+        this.method = setting.method;
+        this.isShowProgress = setting.isShowProgress;
+        this.isShowDialog = setting.isShowDialog;
+        return this;
+    }
+
+    public boolean isFinish(){
+        return this.isFinish;
     }
 
     @Override
@@ -77,9 +111,11 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
             conn.setReadTimeout(8000);
             conn.setConnectTimeout(8000);
 
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
+            conn.setRequestProperty("Accept", "*/*");
             //conn.setRequestProperty("Accept-Encoding", "gzip");
             conn.setDoInput(true);
-            conn.setDoOutput(true);
+            conn.setDoOutput(false);
             conn.setUseCaches(false);
 
             conn.setRequestMethod(this.method.name());
@@ -94,8 +130,10 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
 
             conn.connect();
 
+            Log.e("status", String.valueOf(conn.getResponseCode()));
+
             String line;
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             while ((line=br.readLine()) != null) {
                 result += line;
             }
@@ -112,11 +150,13 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        this.isFinish = false;
+
         if(Utils.isNetworkOK(activity)){
-            dialog.show();
+            if(isShowProgress) dialog.show();
             listener.onPrepare();
         }else{
-            Utils.showNoNetDialog(activity);
+            if(isShowDialog) Utils.showNoNetDialog(activity);
         }
     }
 
@@ -129,10 +169,14 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         if (dialog.isShowing()) dialog.dismiss();
+        this.isFinish = true;
+
+        if(taskManager != null) taskManager.checkAllFinish();
 
         if (Utils.isEmpty(result)) {
             listener.onFailure();
-            Utils.showSorry2Wait(activity);
+            if(isShowDialog) Utils.showSorry2Wait(activity);
+
         } else {
             try {
                 if (result.trim().substring(0, 1).equals("{")) {
@@ -155,12 +199,17 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
 
     }
 
+    public final APIHandler execute(){
+        return (APIHandler)super.execute();
+    }
+
     @Override
     protected void onCancelled() {
         super.onCancelled();
         if (dialog.isShowing()) dialog.dismiss();
+        this.isFinish = true;
         listener.onFailure();
-        Utils.showSorry2Wait(this.activity);
+        if(isShowDialog)Utils.showSorry2Wait(this.activity);
     }
 
     private String gzipCompress(String input){
@@ -181,7 +230,7 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
 
     private String gzipDecompress(String input){
         try{
-            byte[] source = Base64.decode(input, android.util.Base64.DEFAULT);
+            byte[] source = Base64.decode(input, Base64.DEFAULT);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ByteArrayInputStream in = new ByteArrayInputStream(source);
             GZIPInputStream gzipStream = new GZIPInputStream(in);
@@ -224,4 +273,5 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
         }
         return postData.toString().getBytes("UTF-8");
     }
+
 }
