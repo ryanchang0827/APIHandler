@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity implements OnMultiTaskManage
 
         taskManager.setAllTaskFinishCallback(true);
 
-        Setting marqueeSetting = new Setting().APIPath(API_PATH).CallbackListener(someapi1);
-        taskManager.addTask(marqueeSetting);
+        Setting setting1 = new Setting().APIPath(API_PATH).CallbackListener(someapi1);
+        taskManager.addTask(setting1);
 
-        Setting weatherSetting = new Setting().APIPath(API_PATH).Params(params).CallbackListener(someapi2);
-        taskManager.addTask(weatherSetting);
+        Setting setting2 = new Setting().APIPath(API_PATH).Params(params).CallbackListener(someapi2);
+        taskManager.addTask(setting2);
 
         taskManager.runAllTask();
     }
@@ -88,17 +88,17 @@ public class MainActivity extends AppCompatActivity implements OnMultiTaskManage
         //get Data
         MultiTaskManager taskManager = new MultiTaskManager(this);
 
-        Setting marqueeSetting = new Setting()
+        Setting setting1 = new Setting()
                 .APIPath(API_PATH)
                 .CallbackListener(someapi1)
                 .RefreshSecond(30000);
-        taskManager.addTask(marqueeSetting);
+        taskManager.addTask(setting1);
 
-        Setting weatherSetting = new Setting()
+        Setting setting2 = new Setting()
                 .APIPath(API_PATH)
                 .CallbackListener(someapi2)
                 .RefreshSecond(20000);
-        taskManager.addTask(weatherSetting);
+        taskManager.addTask(setting2);
 
         // Get Data Thread
         taskThread = new TaskThread(this, taskManager);
