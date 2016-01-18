@@ -52,3 +52,40 @@ For Android Networking
         });
         a.APIPath(API_PATH).execute();
 ```
+
+###Multiple task
+```java
+        MultiTaskManager taskManager = new MultiTaskManager(this);
+
+        taskManager.setAllTaskFinishCallback(true);
+
+        Setting setting1 = new Setting().APIPath(API_PATH).CallbackListener(someapi1);
+        taskManager.addTask(setting1);
+
+        Setting setting2 = new Setting().APIPath(API_PATH).Params(params).CallbackListener(someapi2);
+        taskManager.addTask(setting2);
+
+        taskManager.runAllTask();
+```
+
+###Multiple task with loop
+```java
+        MultiTaskManager taskManager = new MultiTaskManager(this);
+
+        Setting setting1 = new Setting()
+                .APIPath(API_PATH)
+                .CallbackListener(someapi1)
+                .RefreshSecond(30000);
+        taskManager.addTask(setting1);
+
+        Setting setting2 = new Setting()
+                .APIPath(API_PATH)
+                .CallbackListener(someapi2)
+                .RefreshSecond(20000);
+        taskManager.addTask(setting2);
+
+        // Get Data Thread
+        taskThread = new TaskThread(this, taskManager);
+        taskThread.start();
+```
+
