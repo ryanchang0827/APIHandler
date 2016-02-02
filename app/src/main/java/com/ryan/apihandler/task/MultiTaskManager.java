@@ -35,6 +35,7 @@ public class MultiTaskManager {
 
     public void addTask(Setting setting){
         settingList.add(setting);
+        handlerList.add(null);
         timesList.add(0);
     }
 
