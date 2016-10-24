@@ -61,6 +61,19 @@ public class TaskThread extends Thread {
 
             }
 
+            if(totalSecond > 1000 * 60 * 60 * 10) {
+                totalSecond = 0;
+                ListIterator i = taskManager.settingList.listIterator();
+                while (i.hasNext()) {
+                    i.next();
+                    final int index = i.nextIndex() - 1;
+                    taskManager.timesList.set(index, 0);
+                    Log.e("setIndex", String.valueOf(index) + "times set 0");
+                }
+
+                Log.e("Total Second","Set TotalSecond Zero!!!");
+            }
+
         }
 
     }

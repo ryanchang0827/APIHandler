@@ -42,14 +42,19 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     private Method method = Method.GET;
 
     private boolean isFinish = false;
-    private boolean isShowProgress = true;
     private boolean isShowDialog = true;
 
     public APIHandler(Activity activity) {
         this.activity = activity;
-        dialog = new ProgressDialog(activity);
-        dialog.setMessage("Please Waiting...");
-        dialog.setCancelable(false);
+
+        if(activity == null){
+            this.isShowDialog = false;
+        } else {
+            dialog = new ProgressDialog(activity);
+            dialog.setMessage("Please Waiting...");
+            dialog.setCancelable(false);
+        }
+
     }
 
     public APIHandler(Activity activity, AbstractCallbackListener listener) {
@@ -87,9 +92,12 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
         this.apiPath = setting.apiPath;
         this.p = setting.p;
         this.method = setting.method;
-        this.isShowProgress = setting.isShowProgress;
         this.isShowDialog = setting.isShowDialog;
         return this;
+    }
+
+    public void setShowDialog(boolean isShowDialog){
+        this.isShowDialog = isShowDialog;
     }
 
     public boolean isFinish(){
@@ -153,7 +161,7 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
         this.isFinish = false;
 
         if(Utils.isNetworkOK(activity)){
-            if(isShowProgress) dialog.show();
+            if(isShowDialog) dialog.show();
             listener.onPrepare();
         }else{
             if(isShowDialog) Utils.showNoNetDialog(activity);
@@ -168,7 +176,9 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+
         if (dialog.isShowing()) dialog.dismiss();
+
         this.isFinish = true;
 
         if(taskManager != null) taskManager.checkAllFinish();
@@ -207,8 +217,10 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     protected void onCancelled() {
         super.onCancelled();
         if (dialog.isShowing()) dialog.dismiss();
+
         this.isFinish = true;
         listener.onFailure();
+
         if(isShowDialog)Utils.showSorry2Wait(this.activity);
     }
 

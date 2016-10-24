@@ -13,7 +13,6 @@ public class Setting {
     public Method method = Method.GET;
     public Map<String,Object> p = null;
 
-    public boolean isShowProgress = false;
     public boolean isShowDialog = false;
 
     public int refreshSecond;
@@ -36,11 +35,6 @@ public class Setting {
 
     public Setting Params(Map<String,Object> p){
         this.p = p;
-        return this;
-    }
-
-    public Setting ShowProgress(boolean isShowProgress){
-        this.isShowProgress = isShowProgress;
         return this;
     }
 
