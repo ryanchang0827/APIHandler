@@ -160,12 +160,15 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
         super.onPreExecute();
         this.isFinish = false;
 
-        if(Utils.isNetworkOK(activity)){
-            if(isShowDialog) dialog.show();
-            listener.onPrepare();
-        }else{
-            if(isShowDialog) Utils.showNoNetDialog(activity);
+        if(isShowDialog){
+            if(Utils.isNetworkOK(activity)){
+                dialog.show();
+                listener.onPrepare();
+            } else {
+                Utils.showNoNetDialog(activity);
+            }
         }
+
     }
 
     @Override
@@ -177,7 +180,7 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        if (dialog.isShowing()) dialog.dismiss();
+        if (dialog != null && dialog.isShowing()) dialog.dismiss();
 
         this.isFinish = true;
 
@@ -216,7 +219,7 @@ public class APIHandler extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        if (dialog.isShowing()) dialog.dismiss();
+        if (dialog != null && dialog.isShowing()) dialog.dismiss();
 
         this.isFinish = true;
         listener.onFailure();

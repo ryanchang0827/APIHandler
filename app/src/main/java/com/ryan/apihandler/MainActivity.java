@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnMultiTaskManage
 
         String API_PATH = "https://www.google.com";
 
-        APIHandler a = new APIHandler(activity, new OnApiCallbackListener(){
+        APIHandler a = new APIHandler(null, new OnApiCallbackListener(){
             @Override
             public void onSuccess(String result) {
                 super.onSuccess(result);
@@ -132,11 +132,11 @@ public class MainActivity extends AppCompatActivity implements OnMultiTaskManage
     @Override
     protected void onStop() {
         super.onStop();
-        try {
-            taskThread.setStop(true);
-            taskThread.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+//        try {
+//            taskThread.setStop(true);
+//            taskThread.join();
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
     }
 }

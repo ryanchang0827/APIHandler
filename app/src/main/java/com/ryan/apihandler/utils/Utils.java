@@ -21,8 +21,8 @@ public class Utils {
         return (null == obj) || ("null".equals(obj.toString().toLowerCase().trim())) || "".equals(obj.toString().trim());
     }
 
-    public static boolean isNetworkOK(Activity activity) {
-        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isNetworkOK(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {
             NetworkInfo ni = cm.getActiveNetworkInfo();
             if (ni != null)
